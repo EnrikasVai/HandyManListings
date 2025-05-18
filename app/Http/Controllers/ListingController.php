@@ -12,7 +12,8 @@ class ListingController extends Controller
      */
     public function index()
     {
-        //
+        $listings = Listing::with('category', 'user')->latest()->get();
+        return view('listings.index', compact('listings'));
     }
 
     /**
@@ -37,6 +38,7 @@ class ListingController extends Controller
     public function show(Listing $listing)
     {
         //
+        return view('listings.show', compact('listing'));
     }
 
     /**
