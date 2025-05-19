@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Listing;
+use App\Models\ListingCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ListingController extends Controller
 {
@@ -21,7 +23,8 @@ class ListingController extends Controller
      */
     public function create()
     {
-        //
+        $categories = ListingCategory::all();
+        return view('listings.create' , compact('categories'));
     }
 
     /**
@@ -29,7 +32,21 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'nullable|numeric|min:0',
+            'location' => 'nullable|string|max:255',
+            'listing_category_id' => 'required|exists:listing_categories,id',
+        ]);
+
+        $listing = Listing::create([
+            ...$validated,
+            'user_id' => Auth::id(),
+            'is_active' => true,
+        ]);
+
+        return redirect()->route('listings.show', $listing)->with('success', 'Listing created!');
     }
 
     /**
@@ -38,6 +55,7 @@ class ListingController extends Controller
     public function show(Listing $listing)
     {
         //
+        $listing->load(['category', 'images']); // eager load relationships
         return view('listings.show', compact('listing'));
     }
 
@@ -46,7 +64,8 @@ class ListingController extends Controller
      */
     public function edit(Listing $listing)
     {
-        //
+        $categories = ListingCategory::all();
+        return view('listings.edit', compact('listing', 'categories'));
     }
 
     /**
@@ -54,7 +73,20 @@ class ListingController extends Controller
      */
     public function update(Request $request, Listing $listing)
     {
-        //
+        if ($listing->user_id !== auth()->id()) {
+            abort(403); // Prevent if not owner
+        }
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'nullable|numeric|min:0',
+            'location' => 'required|string|max:255',
+            'listing_category_id' => 'required|exists:listing_categories,id',
+        ]);
+
+        $listing->update($validated);
+
+        return redirect()->route('listings.show', $listing)->with('success', 'Listing updated!');
     }
 
     /**
@@ -62,6 +94,10 @@ class ListingController extends Controller
      */
     public function destroy(Listing $listing)
     {
-        //
+        if ($listing->user_id !== auth()->id()) {
+            abort(403); // Prevent if not owner
+        }
+        $listing->delete();
+        return redirect()->route('dashboard')->with('success', 'Listing deleted!');
     }
 }

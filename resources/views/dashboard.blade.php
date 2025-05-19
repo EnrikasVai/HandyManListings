@@ -23,10 +23,21 @@
                                     <h3 class="font-semibold text-lg">{{ $listing->title }}</h3>
                                     <p class="text-sm text-gray-600">{{ $listing->location }}</p>
                                     <a href="{{ route('listings.show', $listing) }}" class="text-blue-500 text-sm underline">View</a>
+                                    <a href="{{ route('listings.edit', $listing) }}" class="text-blue-500 text-sm underline">Edit Listing</a>
+                                    @auth
+                                        @if(auth()->id() === $listing->user_id)
+                                            <form action="{{ route('listings.destroy', $listing) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this listing?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <x-danger-button>Delete Listing</x-danger-button>
+                                            </form>
+                                        @endif
+                                    @endauth
+
                                 </li>
                             @endforeach
                         </ul>
-                        <a href="{{-- route('listings.create')--}}">
+                        <a href="{{ route('listings.create') }}">
                             <x-primary-button>Add a Listing</x-primary-button>
                         </a>
                     @endif

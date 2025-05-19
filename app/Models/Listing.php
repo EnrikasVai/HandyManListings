@@ -15,6 +15,7 @@ class Listing extends Model
         'listing_category_id',
         'title',
         'description',
+        'location',
         'price',
         'is_active',
     ];
@@ -24,7 +25,7 @@ class Listing extends Model
     }
 
     public function category() {
-        return $this->belongsTo(ListingCategory::class);
+        return $this->belongsTo(ListingCategory::class, 'listing_category_id', 'id');
     }
 
     public function images() {

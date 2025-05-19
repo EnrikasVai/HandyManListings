@@ -19,7 +19,7 @@ class ImageSeeder extends Seeder
         foreach ($listings as $listing) {
             Image::create([
                 'listing_id' => $listing->id,
-                'path' => 'images/dummy.jpg',
+                'path' => 'images/dummy.png',
             ]);
         }
     }
