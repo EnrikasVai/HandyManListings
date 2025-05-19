@@ -22,24 +22,33 @@
                                 <li class="border rounded p-4">
                                     <h3 class="font-semibold text-lg">{{ $listing->title }}</h3>
                                     <p class="text-sm text-gray-600">{{ $listing->location }}</p>
-                                    <a href="{{ route('listings.show', $listing) }}" class="text-blue-500 text-sm underline">View</a>
-                                    <a href="{{ route('listings.edit', $listing) }}" class="text-blue-500 text-sm underline">Edit Listing</a>
-                                    @auth
-                                        @if(auth()->id() === $listing->user_id)
-                                            <form action="{{ route('listings.destroy', $listing) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this listing?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <x-danger-button>Delete Listing</x-danger-button>
-                                            </form>
-                                        @endif
-                                    @endauth
 
+                                    <div class="flex flex-wrap items-center gap-2 mt-4">
+                                        <a href="{{ route('listings.show', $listing) }}">
+                                            <x-secondary-button>View Listing</x-secondary-button>
+                                        </a>
+                                        <a href="{{ route('listings.edit', $listing) }}">
+                                            <x-secondary-button>Edit Listing</x-secondary-button>
+                                        </a>
+
+                                        @auth
+                                            @if(auth()->id() === $listing->user_id)
+                                                <form action="{{ route('listings.destroy', $listing) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this listing?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <x-danger-button>Delete Listing</x-danger-button>
+                                                </form>
+                                            @endif
+                                        @endauth
+                                    </div>
                                 </li>
                             @endforeach
                         </ul>
-                        <a href="{{ route('listings.create') }}">
-                            <x-primary-button>Add a Listing</x-primary-button>
-                        </a>
+                        <div class="mt-6 mx-auto">
+                            <a href="{{ route('listings.create') }}">
+                                <x-primary-button>Add a Listing</x-primary-button>
+                            </a>
+                        </div>
                     @endif
                 </div>
             </div>

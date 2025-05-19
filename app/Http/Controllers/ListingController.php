@@ -6,9 +6,11 @@ use App\Models\Listing;
 use App\Models\ListingCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ListingController extends Controller
 {
+    use AuthorizesRequests;
     /**
      * Display a listing of the resource.
      */
@@ -64,6 +66,7 @@ class ListingController extends Controller
      */
     public function edit(Listing $listing)
     {
+        $this->authorize('update', $listing);
         $categories = ListingCategory::all();
         return view('listings.edit', compact('listing', 'categories'));
     }
@@ -94,6 +97,7 @@ class ListingController extends Controller
      */
     public function destroy(Listing $listing)
     {
+        $this->authorize('delete', $listing);
         if ($listing->user_id !== auth()->id()) {
             abort(403); // Prevent if not owner
         }

@@ -52,6 +52,13 @@
                         <x-input-error :messages="$errors->get('listing_category_id')" class="mt-2" />
                     </div>
 
+                    <!-- Images -->
+                    <div class="mt-4">
+                        <label for="images" class="block font-medium text-sm text-gray-700">Upload Images</label>
+                        <input type="file" name="images[]" multiple class="mt-1 block w-full" accept="image/*">
+                        <small class="text-gray-500">You can upload multiple images.</small>
+                    </div>
+
                     <!-- Submit -->
                     <div class="flex justify-end">
                         <x-primary-button>{{ __('Update Listing') }}</x-primary-button>
