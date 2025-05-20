@@ -53,4 +53,11 @@ class User extends Authenticatable
         return $this->hasMany(Review::class);
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->role !== null && strtolower($this->role) === 'admin';
+    }
+
+
+
 }

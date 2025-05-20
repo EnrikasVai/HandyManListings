@@ -18,12 +18,17 @@
                     <x-nav-link :href="route('listings.index')" :active="request()->routeIs('listings.*')">
                         {{ __('Listings') }}
                     </x-nav-link>
-                    @auth()
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    @endauth
+                    @auth
+                        <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                            {{ __('Dashboard') }}
+                        </x-nav-link>
 
+                            @if(auth()->user()->isAdmin())
+                                <x-nav-link :href="route('admin')" :active="request()->routeIs('admin')">
+                                    {{ __('Admin Panel') }}
+                                </x-nav-link>
+                            @endif
+                    @endauth
                 </div>
             </div>
 
